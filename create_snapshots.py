@@ -45,10 +45,12 @@ def read_config(cfg_file):
         exit(1)
 
 def richlist(assetId, top):
+    blockheight = requests.get(cfg['node'] + '/blocks/height').json()
+
     if assetId == 'WAVES':
-        states = requests.get(cfg['node'] + '/debug/state', headers={ "api_key": cfg['apikey']}).json()
+        states = requests.get(cfg['node'] + '/debug/state/' + str(blockheight['height']), headers={ "api_key": cfg['apikey']}).json()
     elif assetId == 'TN':
-        states = requests.get(cfg['node'] + '/debug/stateTN', headers={ "api_key": cfg['apikey']}).json()
+        states = requests.get(cfg['node'] + '/debug/stateTN/' + str(blockheight['height']), headers={ "api_key": cfg['apikey']}).json()
     else:
         states = requests.get(cfg['node'] + '/assets/' + assetId + '/distribution', headers={ "api_key": cfg['apikey']}).json()
 
@@ -79,7 +81,7 @@ def main():
         n += 1
         if n > cfg['files']:
             break
-        
+
         time.sleep(cfg['interval'])
 
 if __name__ == "__main__":
