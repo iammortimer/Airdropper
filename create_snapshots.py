@@ -37,6 +37,7 @@ def read_config(cfg_file):
         cfg['exclude'] = config.get('snapshot', 'excluded')
 
         cfg['interval'] = config.getint('main', 'interval')
+        cfg['files'] = config.getint('main', 'number_of_files')
 
     except OSError:
         print("Error reading config file")
@@ -44,7 +45,13 @@ def read_config(cfg_file):
         exit(1)
 
 def richlist(assetId, top):
-    states = requests.get(cfg['node'] + '/assets/' + assetId + '/distribution', headers={ "api_key": cfg['apikey']}).json()
+    if assetId == 'WAVES':
+        states = requests.get(cfg['node'] + '/debug/state', headers={ "api_key": cfg['apikey']}).json()
+    elif assetId == 'TN':
+        states = requests.get(cfg['node'] + '/debug/stateTN', headers={ "api_key": cfg['apikey']}).json()
+    else:
+        states = requests.get(cfg['node'] + '/assets/' + assetId + '/distribution', headers={ "api_key": cfg['apikey']}).json()
+
     n = 0
     for i in sorted(states.items(), key=lambda x: -x[1]):
         balance = i[1]
@@ -62,7 +69,7 @@ def main():
     global richlisters
 
     n = 1
-    while n < 10:
+    while n <= cfg['files']:
         richlisters = []
         richlist(cfg['checkassetid'], cfg['top'])
 
@@ -70,6 +77,9 @@ def main():
             json.dump(richlisters, outfile)
 
         n += 1
+        if n > cfg['files']:
+            break
+        
         time.sleep(cfg['interval'])
 
 if __name__ == "__main__":
