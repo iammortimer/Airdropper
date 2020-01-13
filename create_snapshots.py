@@ -48,7 +48,7 @@ def richlist(assetId, top):
     blockheight = requests.get(cfg['node'] + '/blocks/height').json()
 
     if assetId == 'WAVES':
-        states = requests.get(cfg['node'] + '/debug/state/' + str(blockheight['height']), headers={ "api_key": cfg['apikey']}).json()
+        states = requests.get(cfg['node'] + '/debug/stateWaves/' + str(blockheight['height']), headers={ "api_key": cfg['apikey']}).json()
     elif assetId == 'TN':
         states = requests.get(cfg['node'] + '/debug/stateTN/' + str(blockheight['height']), headers={ "api_key": cfg['apikey']}).json()
     else:

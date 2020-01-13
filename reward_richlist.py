@@ -172,8 +172,8 @@ for r in richlist:
 payments = []
 paynow = []
 for r in richlist:
-    payments.append({ 'amount': richlist[r]['reward'], 'fee': cfg['orderfee'], 'sender': address.address, 'attachment': 'Pool Party Node Token montly airdrop reward airdrop!', 'recipient': r, 'assetId': cfg['rewardAssetID']})
-    paynow.append({ 'amount': richlist[r]['reward'], 'recipient': r})
+    payments.append({ 'amount': richlist[r]['reward'] * pow(10, asset.decimals), 'fee': cfg['orderfee'], 'sender': address.address, 'attachment': 'Pool Party Node Token montly airdrop reward airdrop!', 'recipient': r, 'assetId': cfg['rewardAssetID']})
+    paynow.append({ 'amount': richlist[r]['reward'] * pow(10, asset.decimals), 'recipient': r})
 
 if cfg['dopayment'] == 1:
     masspay(paynow)
